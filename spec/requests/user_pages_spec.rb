@@ -80,6 +80,31 @@ describe "User pages" do
     end
   end
 
+  describe "profile page pagination" do
+    let(:user) { FactoryGirl.create(:user) }
+    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Foo-1") }
+    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Foo-2") }
+    let!(:m3) { FactoryGirl.create(:micropost, user: user, content: "Foo-3") }
+    let!(:m4) { FactoryGirl.create(:micropost, user: user, content: "Foo-4") }
+    let!(:m5) { FactoryGirl.create(:micropost, user: user, content: "Foo-5") }
+    let!(:m6) { FactoryGirl.create(:micropost, user: user, content: "Foo-6") }
+    let!(:m7) { FactoryGirl.create(:micropost, user: user, content: "Foo-7") }
+    let!(:m8) { FactoryGirl.create(:micropost, user: user, content: "Foo-8") }
+    let!(:m9) { FactoryGirl.create(:micropost, user: user, content: "Foo-9") }
+    let!(:m10) { FactoryGirl.create(:micropost, user: user, content: "Foo-10") }
+    let!(:m11) { FactoryGirl.create(:micropost, user: user, content: "Foo-11") }
+
+    before {visit user_path(user) }
+
+    it { should have_selector('div.pagination') }
+
+    it "should list each micropost" do
+      user.microposts.paginate(page: 1, per_page: 5).each do |micropost|
+        expect(page).to have_selector('li', text: micropost.content)
+      end
+    end
+  end
+
   describe "signup page" do
     before { visit signup_path }
 
